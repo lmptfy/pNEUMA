@@ -11,7 +11,7 @@ class Refactor:
         # Defines the columns (first line) and strips it
         self.cols = [c.strip() for c in self.csv[0]]
         self.data = self.csv[1:]  # Dataset without columns
-        self.y_size = self.data[-1][0]  # Num of tot lines
+        self.y_size = int(self.data[-1][0])  # Num of tot lines
         self.name = file
 
     def row(self, row) -> list:
@@ -41,7 +41,7 @@ class Refactor:
                 refactored.append(sublist)
 
         print(
-            f"({fixed_elements[0]}/{self.y_size})\tRow refactored as shape"
+            f"({fixed_elements[0]}/{self.size})\tRow refactored as shape"
             + ":\t{x_size}x{len(refactored)}")
 
         return refactored
@@ -77,7 +77,7 @@ class Refactor:
         """
         TODO: docstring
         """
-        path = f"data/output/{name}.csv"
+        path = f"data/output/{name}_{self.size}.csv"
         file.to_csv(path, index=False)
 
     def analytic(self):
@@ -101,6 +101,11 @@ class Refactor:
         """
         df = pd.DataFrame()
 
+        if size > self.y_size:
+            self.size = self.y_size
+        else:
+            self.size = size
+
         self.fixed = fixed
         self.variable = variable
         self.analytics = analytics  # NOT used yet
@@ -115,6 +120,6 @@ class Refactor:
 
             if i == size:
                 break
-            # i += 1
+            i += 1
 
         self.save(file=df, name=self.name)
